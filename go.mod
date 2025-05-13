@@ -47,7 +47,7 @@ require (
 )
 
 require (
-	github.com/adrianbrad/queue v1.3.0
+	github.com/adrianbrad/queue v1.4.0
 	github.com/oschwald/maxminddb-golang v1.13.0 // indirect
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sys v0.33.0 // indirect

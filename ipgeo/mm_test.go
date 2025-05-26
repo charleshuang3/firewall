@@ -45,34 +45,27 @@ func TestIsFileUpdated(t *testing.T) {
 	err = os.WriteFile(latestFile, []byte("latest"), 0644)
 	require.NoError(t, err)
 
-	// Case 1: Files are different sizes
+	// Files are different sizes
 	t.Run("different sizes", func(t *testing.T) {
 		updated, _, err := isFileUpdated(currentFile, latestFile)
 		require.NoError(t, err)
 		assert.True(t, updated)
 	})
 
-	// Case 2: Files are same size, different content, different mod time
-	t.Run("same size, different content, different mod time", func(t *testing.T) {
-		err = os.WriteFile(latestFile, []byte("curren"), 0644)
-		require.NoError(t, err)
-
-		updated, _, err := isFileUpdated(currentFile, latestFile)
-		require.NoError(t, err)
-		assert.True(t, updated)
-	})
-
-	// Case 3: Files are same size, same content, different mod time
+	// Files are same size, same content, different mod time
 	t.Run("same size, same content, different mod time", func(t *testing.T) {
 		err = os.WriteFile(latestFile, []byte("current"), 0644)
 		require.NoError(t, err)
+		ts := time.Now().Add(time.Minute)
+		err = os.Chtimes(latestFile, ts, ts)
+		require.NoError(t, err)
 
 		updated, _, err := isFileUpdated(currentFile, latestFile)
 		require.NoError(t, err)
 		assert.True(t, updated)
 	})
 
-	// Case 4: Files are same size, same content, same mod time
+	// Files are same size, same content, same mod time
 	t.Run("same size, same content, same mod time", func(t *testing.T) {
 		currentTime := time.Now()
 		err = os.Chtimes(currentFile, currentTime, currentTime)

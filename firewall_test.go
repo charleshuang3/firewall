@@ -111,16 +111,11 @@ func TestBanIP(t *testing.T) {
 				// Sticking to NotContains as it was, which is also safe.
 				assert.NotContains(t, mockFW.BannedIPs, tt.ip)
 			}
-			// We don't check JailUntil and Geo precisely due to time dependency and nil geo for the logged case
 		})
 	}
 }
 
 func TestLogIPError(t *testing.T) {
-	// Note: The LogEntry struct definition for expectedLog in TestBanIP might need adjustment
-	// if it was fully removed. The instructions were to remove the variable `expectedLog`,
-	// not necessarily the type from the test struct. Assuming `expectedLog` field is still there for the first test case.
-
 	tests := []struct {
 		name              string
 		ip                string
@@ -129,8 +124,8 @@ func TestLogIPError(t *testing.T) {
 		errorCount        int // Number of times to call LogIPError
 		whiteList         []string
 		expectedBanned    bool
-		expectedLogAction string // This will be used only if logs are expected
-		expectLog         bool   // New field
+		expectedLogAction string
+		expectLog         bool
 	}{
 		{
 			name:              "Log error at threshold",
@@ -173,7 +168,7 @@ func TestLogIPError(t *testing.T) {
 			errorCount:        5, // Should not matter for whitelisted
 			whiteList:         []string{"192.168.1.2"},
 			expectedBanned:    false,
-			expectedLogAction: "whitelisted", // Value will be ignored due to expectLog: false
+			expectedLogAction: "whitelisted",
 			expectLog:         false,
 		},
 	}

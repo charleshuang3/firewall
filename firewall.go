@@ -92,13 +92,13 @@ func (s *Firewall) loop() {
 		select {
 		case b := <-s.banCh:
 			if s.inWhitelist(b.ip) {
-				s.logger.Log(b.ip, time.Time{}, b.reasons, "whitelisted", nil)
+				// IP is whitelisted, do not log
 				continue
 			}
 			s.doBanIP(&b)
 		case c := <-s.countCh:
 			if s.inWhitelist(c.ip) {
-				s.logger.Log(c.ip, time.Time{}, []string{c.reason}, "whitelisted", nil)
+				// IP is whitelisted, do not log
 				continue
 			}
 			s.doCountError(&c)

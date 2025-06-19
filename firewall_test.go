@@ -52,7 +52,7 @@ func TestBanIP(t *testing.T) {
 		reason          string
 		whiteList       []string
 		expectedBanned  bool
-		expectedLog     LogEntry
+		expectedLog     LogEntry // This field is optional; only provided for cases expecting logs.
 	}{
 		{
 			name:            "Ban non-whitelisted IP",
@@ -61,7 +61,7 @@ func TestBanIP(t *testing.T) {
 			reason:          "Too many failed logins",
 			whiteList:       []string{},
 			expectedBanned:  true,
-			expectedLog: LogEntry{
+			expectedLog: LogEntry{ // Log is expected for this case
 				IP:      "192.168.1.1",
 				Reasons: []string{"Too many failed logins"},
 				Action:  "ban",
@@ -75,12 +75,7 @@ func TestBanIP(t *testing.T) {
 			reason:          "Too many failed logins",
 			whiteList:       []string{"192.168.1.2"},
 			expectedBanned:  false,
-			expectedLog: LogEntry{
-				IP:      "192.168.1.2",
-				Reasons: []string{"Too many failed logins"},
-				Action:  "whitelisted",
-				Geo:     nil,
-			},
+			// expectedLog is intentionally omitted as no log is expected.
 		},
 	}
 
@@ -90,27 +85,38 @@ func TestBanIP(t *testing.T) {
 			mockLogger := &MockILogger{}
 			fw := New(tt.whiteList, mockFW, mockLogger, nil, ForgivableError{}) // ipGeo and forgivableError are not used in BanIP directly
 
-			mockLogger.Wg.Add(1)
-			fw.BanIP(tt.ip, tt.timeoutInMinute, tt.reason)
-			mockLogger.Wg.Wait()
+			if tt.name == "Do not ban whitelisted IP" {
+				fw.BanIP(tt.ip, tt.timeoutInMinute, tt.reason)
+				assert.Empty(t, mockLogger.Logs) // Expect no logs for whitelisted IP
+			} else { // "Ban non-whitelisted IP" or other cases that expect logs
+				mockLogger.Wg.Add(1)
+				fw.BanIP(tt.ip, tt.timeoutInMinute, tt.reason)
+				mockLogger.Wg.Wait()
+
+				assert.Len(t, mockLogger.Logs, 1)
+				logEntry := mockLogger.Logs[0]
+				// Assertions for the "Ban non-whitelisted IP" case using tt.expectedLog
+				assert.Equal(t, tt.expectedLog.IP, logEntry.IP)
+				assert.Equal(t, tt.expectedLog.Reasons, logEntry.Reasons)
+				assert.Equal(t, tt.expectedLog.Action, logEntry.Action)
+				// Geo and JailUntil are not checked precisely here
+			}
 
 			if tt.expectedBanned {
 				assert.Equal(t, []string{tt.ip}, mockFW.BannedIPs)
 			} else {
 				assert.NotContains(t, mockFW.BannedIPs, tt.ip)
 			}
-
-			assert.Len(t, mockLogger.Logs, 1)
-			logEntry := mockLogger.Logs[0]
-			assert.Equal(t, tt.expectedLog.IP, logEntry.IP)
-			assert.Equal(t, tt.expectedLog.Reasons, logEntry.Reasons)
-			assert.Equal(t, tt.expectedLog.Action, logEntry.Action)
-			// We don't check JailUntil and Geo precisely due to time dependency and nil geo
+			// We don't check JailUntil and Geo precisely due to time dependency and nil geo for the logged case
 		})
 	}
 }
 
 func TestLogIPError(t *testing.T) {
+	// Note: The LogEntry struct definition for expectedLog in TestBanIP might need adjustment
+	// if it was fully removed. The instructions were to remove the variable `expectedLog`,
+	// not necessarily the type from the test struct. Assuming `expectedLog` field is still there for the first test case.
+
 	tests := []struct {
 		name              string
 		ip                string
@@ -119,7 +125,7 @@ func TestLogIPError(t *testing.T) {
 		errorCount        int // Number of times to call LogIPError
 		whiteList         []string
 		expectedBanned    bool
-		expectedLogAction string
+		expectedLogAction string // This will be used only if logs are expected
 	}{
 		{
 			name:              "Log error at threshold",
@@ -169,22 +175,38 @@ func TestLogIPError(t *testing.T) {
 			mockLogger := &MockILogger{}
 			fw := New(tt.whiteList, mockFW, mockLogger, nil, tt.forgivable) // ipGeo is not used in LogIPError directly
 
-			mockLogger.Wg.Add(tt.errorCount)
+			// Determine if logs are expected
+			expectLogs := true
+			for _, wlIP := range tt.whiteList {
+				if wlIP == tt.ip {
+					expectLogs = false
+					break
+				}
+			}
+
+			if expectLogs {
+				mockLogger.Wg.Add(tt.errorCount)
+			}
+
 			for i := 0; i < tt.errorCount; i++ {
 				fw.LogIPError(tt.ip, tt.reason)
 			}
-			mockLogger.Wg.Wait()
+
+			if expectLogs {
+				mockLogger.Wg.Wait()
+				assert.Len(t, mockLogger.Logs, tt.errorCount)
+				assert.NotEmpty(t, mockLogger.Logs) // Should be true if errorCount > 0
+				lastLogEntry := mockLogger.Logs[len(mockLogger.Logs)-1]
+				assert.Equal(t, tt.expectedLogAction, lastLogEntry.Action)
+			} else {
+				assert.Empty(t, mockLogger.Logs)
+			}
 
 			if tt.expectedBanned {
 				assert.Equal(t, []string{tt.ip}, mockFW.BannedIPs)
 			} else {
 				assert.NotContains(t, mockFW.BannedIPs, tt.ip)
 			}
-
-			// Check the last log entry's action
-			assert.NotEmpty(t, mockLogger.Logs)
-			lastLogEntry := mockLogger.Logs[len(mockLogger.Logs)-1]
-			assert.Equal(t, tt.expectedLogAction, lastLogEntry.Action)
 		})
 	}
 }

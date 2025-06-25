@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/charleshuang3/firewall/gcplog"
+	"github.com/charleshuang3/firewall/ipgeo"
 )
 
 var (
@@ -21,7 +22,9 @@ func main() {
 		log.Fatalf("failed to create logger: %v", err)
 	}
 
-	logger.Log("10.0.0.1", time.Now().Add(time.Hour), []string{"for testing"}, "act", nil)
+	logger.Log("10.0.0.1", time.Now().Add(time.Hour), []string{"for testing"}, "act", &ipgeo.IPGeo{
+		IP: "10.0.0.1",
+	})
 
 	logger.Close()
 }

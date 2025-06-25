@@ -71,6 +71,7 @@ func New(whiteList []string,
 	f := &Firewall{
 		whiteList:  []*ipMatcher{},
 		fw:         fw,
+		ipGeo:      ipGeo,
 		logger:     logger,
 		forgivable: forgivable,
 		errorCount: map[string]*errorCounter{},
@@ -158,7 +159,11 @@ func (s *Firewall) doCountError(c *countingError) {
 	}
 
 	if ec.rateLimiter.Allow() {
-		s.logger.Log(c.ip, time.Time{}, []string{c.reason}, "count error", nil)
+		var geo *ipgeo.IPGeo
+		if s.ipGeo != nil {
+			geo = s.ipGeo.GetIPGeo(c.ip)
+		}
+		s.logger.Log(c.ip, time.Time{}, []string{c.reason}, "count error", geo)
 		return
 	}
 

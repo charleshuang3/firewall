@@ -39,7 +39,7 @@ func (s *Logger) Close() {
 
 type logEntry struct {
 	IP        string       `json:"ip"`
-	JailUntil string       `json:"jail_until,emitempty"`
+	JailUntil string       `json:"jail_until,omitempty"`
 	Reasons   []string     `json:"reasons"`
 	Action    string       `json:"action"`
 	Geo       *ipgeo.IPGeo `json:"geo"`

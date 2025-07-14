@@ -5,7 +5,7 @@ go 1.24.3
 require (
 	cloud.google.com/go/logging v1.13.0
 	github.com/go-routeros/routeros/v3 v3.0.1
-	github.com/oschwald/geoip2-golang v1.11.0
+	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/rs/zerolog v1.34.0
 	golang.org/x/time v0.12.0
 	google.golang.org/api v0.241.0

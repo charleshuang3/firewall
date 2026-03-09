@@ -1,13 +1,13 @@
 module github.com/charleshuang3/firewall
 
-go 1.24.3
+go 1.25.0
 
 require (
 	cloud.google.com/go/logging v1.13.1
 	github.com/go-routeros/routeros/v3 v3.0.1
 	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/rs/zerolog v1.34.0
-	golang.org/x/time v0.14.0
+	golang.org/x/time v0.15.0
 	google.golang.org/api v0.258.0
 )
 

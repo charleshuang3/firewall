@@ -8,7 +8,7 @@ require (
 	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/rs/zerolog v1.35.0
 	golang.org/x/time v0.15.0
-	google.golang.org/api v0.275.0
+	google.golang.org/api v0.276.0
 )
 
 require (

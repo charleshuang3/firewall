@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/logging v1.16.0
 	github.com/go-routeros/routeros/v3 v3.0.1
 	github.com/oschwald/geoip2-golang v1.13.0
-	github.com/rs/zerolog v1.35.0
+	github.com/rs/zerolog v1.35.1
 	golang.org/x/time v0.15.0
 	google.golang.org/api v0.276.0
 )

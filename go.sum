@@ -12,8 +12,8 @@ cloud.google.com/go/logging v1.16.0 h1:MMNgYRvZ/pEwiNSkcoJTKWfAbAJDqCqAMJiarZx+/
 cloud.google.com/go/logging v1.16.0/go.mod h1:ZGKnpBaURITh+g/uom2VhbiFoFWvejcrHPDhxFtU/gI=
 cloud.google.com/go/longrunning v0.11.0 h1:fE4XVLJQj+gRnw1HrbDyQXXgC0aiqY3wxP7DDU4cWk0=
 cloud.google.com/go/longrunning v0.11.0/go.mod h1:8nqFBPOO1U/XkhWl0I19AMZEphrHi73VNABIpKYaTwM=
-github.com/adrianbrad/queue v1.4.0 h1:fOaylNboK+EluYaE3rlV2m5y3OvYYZPj9/hXh7GmsGk=
-github.com/adrianbrad/queue v1.4.0/go.mod h1:wYiPC/3MPbyT45QHLrPR4zcqJWPePubM1oEP/xTwhUs=
+github.com/adrianbrad/queue v1.7.0 h1:9Cdbn7oCT3ZFWaKzveymFq8tHB/uDtWbZ7MiLi/T8yI=
+github.com/adrianbrad/queue v1.7.0/go.mod h1:wYiPC/3MPbyT45QHLrPR4zcqJWPePubM1oEP/xTwhUs=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/cncf/xds/go v0.0.0-20251210132809-ee656c7534f5 h1:6xNmx7iTtyBRev0+D/Tv1FZd4SCg8axKApyNyRsAt/w=

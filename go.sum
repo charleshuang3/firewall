@@ -8,8 +8,8 @@ cloud.google.com/go/compute/metadata v0.9.0 h1:pDUj4QMoPejqq20dK0Pg2N4yG9zIkYGdB
 cloud.google.com/go/compute/metadata v0.9.0/go.mod h1:E0bWwX5wTnLPedCKqk3pJmVgCBSM6qQI1yTBdEb3C10=
 cloud.google.com/go/iam v1.8.0 h1:e5QOdN1zQ3MTWYtXIf2buX+jxqvo2sKqBCOLrteLd1M=
 cloud.google.com/go/iam v1.8.0/go.mod h1:IkWUaEeLK91WQqTKa/fi5xdHJbL49kv2j/vlAZQSJ+k=
-cloud.google.com/go/logging v1.16.0 h1:MMNgYRvZ/pEwiNSkcoJTKWfAbAJDqCqAMJiarZx+/CI=
-cloud.google.com/go/logging v1.16.0/go.mod h1:ZGKnpBaURITh+g/uom2VhbiFoFWvejcrHPDhxFtU/gI=
+cloud.google.com/go/logging v1.17.0 h1:rUFekZYwHiKElXCyz3zYBGz4BOeIqzgCKxVLdgrZ5mY=
+cloud.google.com/go/logging v1.17.0/go.mod h1:ZGKnpBaURITh+g/uom2VhbiFoFWvejcrHPDhxFtU/gI=
 cloud.google.com/go/longrunning v0.11.0 h1:fE4XVLJQj+gRnw1HrbDyQXXgC0aiqY3wxP7DDU4cWk0=
 cloud.google.com/go/longrunning v0.11.0/go.mod h1:8nqFBPOO1U/XkhWl0I19AMZEphrHi73VNABIpKYaTwM=
 github.com/adrianbrad/queue v1.4.0 h1:fOaylNboK+EluYaE3rlV2m5y3OvYYZPj9/hXh7GmsGk=

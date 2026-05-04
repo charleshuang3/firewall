@@ -3,7 +3,7 @@ module github.com/charleshuang3/firewall
 go 1.26.2
 
 require (
-	cloud.google.com/go/logging v1.16.0
+	cloud.google.com/go/logging v1.17.0
 	github.com/go-routeros/routeros/v3 v3.0.1
 	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/rs/zerolog v1.35.0

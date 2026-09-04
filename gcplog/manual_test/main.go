@@ -26,5 +26,7 @@ func main() {
 		IP: "10.0.0.1",
 	})
 
-	logger.Close()
+	if err := logger.Close(); err != nil {
+		log.Printf("failed to close logger: %v", err)
+	}
 }

@@ -35,7 +35,9 @@ func (s *API) BanIP(ip string, timeoutInMinute int) {
 		log.Printf("routeros.Dial failed: %v", err)
 		return
 	}
-	defer c.Close()
+	defer func() {
+		_ = c.Close()
+	}()
 
 	reply, err := c.Run("/ip/firewall/address-list/add", "=list=black-list", "=address="+ip, fmt.Sprintf("=timeout=%dm", timeoutInMinute))
 	if err != nil {

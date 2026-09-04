@@ -153,9 +153,13 @@ func (s *Firewall) doCountError(c *countingError) {
 		return
 	}
 
-	ec.reasons.Offer(c.reason)
+	if err := ec.reasons.Offer(c.reason); err != nil {
+		log.Printf("failed to offer reason to queue: %v", err)
+	}
 	for ec.reasons.Size() > s.forgivable.Count {
-		ec.reasons.Get()
+		if _, err := ec.reasons.Get(); err != nil {
+			break
+		}
 	}
 
 	if ec.rateLimiter.Allow() {

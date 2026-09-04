@@ -20,7 +20,7 @@ type Logger struct {
 
 func New(authFile, projectID, service string) (*Logger, error) {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile(authFile)
+	opt := option.WithAuthCredentialsFile(option.ServiceAccount, authFile)
 	client, err := logging.NewClient(ctx, projectID, opt)
 	if err != nil {
 		return nil, err
@@ -32,9 +32,9 @@ func New(authFile, projectID, service string) (*Logger, error) {
 	}, nil
 }
 
-// Close Should be call in grateful shutdown
-func (s *Logger) Close() {
-	s.client.Close()
+// Close should be called in graceful shutdown
+func (s *Logger) Close() error {
+	return s.client.Close()
 }
 
 type logEntry struct {

@@ -78,17 +78,23 @@ func copy(src, dst string, srcStat os.FileInfo) error {
 	if err != nil {
 		return err
 	}
-	defer source.Close()
+	defer func() {
+		_ = source.Close()
+	}()
 
 	destination, err := os.Create(dst)
 	if err != nil {
 		return err
 	}
-	defer destination.Close()
+	defer func() {
+		_ = destination.Close()
+	}()
 	_, err = io.Copy(destination, source)
+	if err != nil {
+		return err
+	}
 
-	os.Chtimes(dst, time.Time{}, srcStat.ModTime())
-	return err
+	return os.Chtimes(dst, time.Time{}, srcStat.ModTime())
 }
 
 func (db *AutoUpdateMMIPGeo) update() {
@@ -116,7 +122,9 @@ func (db *AutoUpdateMMIPGeo) update() {
 		return
 	}
 
-	db.mm.Close()
+	if err := db.mm.Close(); err != nil {
+		log.Printf("Close mm db failed: %v", err)
+	}
 
 	if cityDBUpdated {
 		if err := copy(db.updatedCityDBFile, db.cityDBFile, updatedCityDBStat); err != nil {
@@ -211,7 +219,16 @@ func (mm *MMIPGeo) GetIPGeo(ip string) *IPGeo {
 	return res
 }
 
-func (mm *MMIPGeo) Close() {
-	mm.cityDB.Close()
-	mm.asnDB.Close()
+func (mm *MMIPGeo) Close() error {
+	var errs []error
+	if err := mm.cityDB.Close(); err != nil {
+		errs = append(errs, err)
+	}
+	if err := mm.asnDB.Close(); err != nil {
+		errs = append(errs, err)
+	}
+	if len(errs) > 0 {
+		return fmt.Errorf("close error: %v", errs)
+	}
+	return nil
 }

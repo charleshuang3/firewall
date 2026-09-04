@@ -120,11 +120,15 @@ func TestAutoUpdateMMIPGeo_update(t *testing.T) {
 	copyFile := func(src, dst string) {
 		srcFile, err := os.Open(src)
 		require.NoError(t, err)
-		defer srcFile.Close()
+		defer func() {
+			require.NoError(t, srcFile.Close())
+		}()
 
 		dstFile, err := os.Create(dst)
 		require.NoError(t, err)
-		defer dstFile.Close()
+		defer func() {
+			require.NoError(t, dstFile.Close())
+		}()
 
 		_, err = io.Copy(dstFile, srcFile)
 		require.NoError(t, err)
@@ -138,7 +142,9 @@ func TestAutoUpdateMMIPGeo_update(t *testing.T) {
 	t.Run("no update needed", func(t *testing.T) {
 		db, err := NewAutoUpdateMMIPGeo(currentCityDB, updatedCityDB, currentASNDB, updatedASNDB)
 		require.NoError(t, err)
-		defer db.mm.Close()
+		defer func() {
+			require.NoError(t, db.mm.Close())
+		}()
 
 		initialMM := db.mm
 
